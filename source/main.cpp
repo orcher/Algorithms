@@ -6,7 +6,7 @@
 #include <sstream>
 #include <algorithm>
 #include <ctime>
-
+#include <cmath>
 
 /*
 	Returns greatest devisor of a and b
@@ -41,8 +41,10 @@ void drawCircle(float a, float b, float r, float prec)
 /*
 	Swaps values of int poiters a and b
 */
-void swap(int *a, int *b)
+template<typename T> void swap(T *a, T *b)
 {
+	if (*a == *b) return;
+
 	*a ^= *b;
 	*b ^= *a;
 	*a ^= *b;
@@ -50,10 +52,10 @@ void swap(int *a, int *b)
 
 /*
 	QuickSort sorting algorithm
-	arr - reference to vector of ints that are to be sorted
+	arr - reference to some array that are to be sorted
 	<begin, end> - sorting range
 */
-void quickSort(std::vector<int> &arr, unsigned int begin, unsigned int end)
+template<typename T> void quickSort(T &arr, unsigned int begin, unsigned int end)
 {
 	int pivot = arr[(end + begin) / 2];
 	unsigned int i = begin;
@@ -269,9 +271,22 @@ void testDictionaryClass()
 	}
 }
 
+/*
+	Checks if all chars in string str are unique
+*/
+bool allUniqueChars(std::string str)
+{
+	quickSort(str, 0, str.size() - 1);
+
+	int i = 0;
+	while (i < str.size() - 1 && str[i] != str[i + 1]){ i++; }
+
+	return (i == str.size() - 1);
+}
+
+
 void main()
 {
-	testDictionaryClass();
 
 	getchar();
 }
