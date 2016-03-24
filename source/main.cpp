@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <ctime>
 #include <cmath>
+#include <thread>
+#include <cstdio>
 
 /*
 	Returns greatest devisor of a and b
@@ -278,15 +280,58 @@ bool allUniqueChars(std::string str)
 {
 	quickSort(str, 0, str.size() - 1);
 
-	int i = 0;
+	unsigned int i = 0;
 	while (i < str.size() - 1 && str[i] != str[i + 1]){ i++; }
 
 	return (i == str.size() - 1);
 }
 
+/*
+    Singleton clss implementation
+*/
+class S
+{
+private:
+    static S *obj;
+    S(){}
+
+public:
+    static S *instance()
+    {
+        if (obj == 0)
+            obj = new S();
+        return obj;
+    }
+    S(S const&);
+    void operator=(S const&);
+};
+S* S::obj = nullptr;
+
+int sumNums(std::string filename)
+{
+    int sum = 0;
+
+    std::ifstream is(filename);
+    int val;
+    while (is >> val)
+        sum += val;
+
+    return sum;
+}
+
+/*
+    Reqursive string reversing function
+*/
+void printreverse(char *s) {
+    if (*s != 0)
+        printreverse(s + 1);
+    putchar(*s);
+}
+
 
 void main()
 {
-
+    printreverse("Ala ma kota");
+   
 	getchar();
 }
