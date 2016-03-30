@@ -82,6 +82,66 @@ template<typename T> void quickSort(T &arr, unsigned int begin, unsigned int end
 }
 
 /*
+Merge function for MergeSort algorithm
+*/
+void merge(std::vector<int> &arr, unsigned int start, unsigned int end)
+{
+    unsigned int mid = (start + end) / 2;
+    std::vector<int> tmp;
+    for (unsigned int z = start; z <= mid; z++)
+        tmp.push_back(arr[z]);
+
+    unsigned int i = 0;
+    unsigned int j = mid + 1;
+    unsigned int k = start;
+    while (i < tmp.size() && j <= end)
+    {
+        if (tmp[i] < arr[j])
+        {
+            arr[k] = tmp[i];
+            k++;
+            i++;
+        }
+        else
+        {
+            arr[k] = arr[j];
+            k++;
+            j++;
+        }
+    }
+
+    while (i < tmp.size())
+    {
+        arr[k] = tmp[i];
+        k++;
+        i++;
+    }
+    while (j <= end)
+    {
+        arr[k] = arr[j];
+        k++;
+        j++;
+    }
+}
+
+/*
+MergeSort sorting algorithm
+arr - reference to vector of ints that are to be sorted
+<begin, end> - sorting range
+*/
+void mergeSort(std::vector<int> &arr, unsigned int start, unsigned int end)
+{
+    if (start >= end) return;
+    unsigned int mid = (start + end) / 2;
+    if (mid > start)
+    {
+        mergeSort(arr, start, mid);
+        mergeSort(arr, mid + 1, end);
+    }
+    merge(arr, start, end);
+}
+
+/*
 	BubleSort sorting algorithm
 	arr - reference to vector of ints that are to be sorted
 	<begin, end> - sorting range
@@ -328,10 +388,41 @@ void printreverse(char *s) {
     putchar(*s);
 }
 
+/*
+    String rotation funstion (roationon by 1 to the right)
+*/
+void rotate(std::string &s)
+{
+    for (unsigned int i = 0; i < s.size() - 1; i++)
+        swap(&s[s.size() - 2 - i], &s[s.size() - 1 - i]);
+}
+
+/*
+    Heaps' algorithm printing all possible permutations
+*/
+void permut(std::string &s, int n)
+{
+    if (n == 1)
+        printf("%s\n", s.c_str());
+    else
+    {
+        for (int i = 0; i < n - 1; i++)
+        {
+            permut(s, n - 1);
+            if (n % 2 == 0)
+                swap(&s[i], &s[n - 1]);
+            else
+                swap(&s[0], &s[n - 1]);
+        }
+        permut(s, n - 1);
+    }
+}
 
 void main()
 {
-    printreverse("Ala ma kota");
-   
+    std::string s = "abcd";
+
+    permut(s, s.size());
+
 	getchar();
 }
