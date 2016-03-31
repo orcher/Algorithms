@@ -79,7 +79,7 @@ void quickSort(std::vector<int> &arr, unsigned int begin, unsigned int end)
 }
 
 /*
-Merge function for MergeSort algorithm
+    Merge function for MergeSort algorithm
 */
 void merge(std::vector<int> &arr, unsigned int start, unsigned int end)
 {
@@ -122,9 +122,9 @@ void merge(std::vector<int> &arr, unsigned int start, unsigned int end)
 }
 
 /*
-MergeSort sorting algorithm
-arr - reference to vector of ints that are to be sorted
-<begin, end> - sorting range
+    MergeSort sorting algorithm
+    arr - reference to vector of ints that are to be sorted
+    <begin, end> - sorting range
 */
 void mergeSort(std::vector<int> &arr, unsigned int start, unsigned int end)
 {
@@ -207,7 +207,7 @@ public:
 		Node *node = first;
 		while (node)
 		{
-			printf("%d\n", node->data);
+			printf("%d ", node->data);
 			node = node->next;
 		}
 		printf("\n");
@@ -226,6 +226,19 @@ public:
 		}
 		first = prev;
 	}
+    void reverseRevursive(Node *current = nullptr, Node *previous = nullptr)
+    {
+        if (!current) 
+            current = first;
+
+        if (current->next)
+            reverseRevursive(current->next, current);
+        else
+            first = current;
+
+        current->next = previous;
+
+    }
 };
 
 /*
@@ -335,7 +348,7 @@ void testDictionaryClass()
 }
 
 /*
-String rotation funstion (roationon by 1 to the right)
+    String rotation funstion (roationon by 1 to the right)
 */
 void rotate(std::string &s)
 {
@@ -344,7 +357,7 @@ void rotate(std::string &s)
 }
 
 /*
-Heaps' algorithm printing all possible permutations
+    Heaps' algorithm printing all possible permutations
 */
 void permut(std::string &s, int n)
 {
@@ -364,11 +377,14 @@ void permut(std::string &s, int n)
     }
 }
 
+/*
+    Returns maximum sub sum of a vector (O(n))
+*/
 int maxSubSum(std::vector<int> a)
 {
     int max_sum_so_far = 0;
     int max_current_sum = 0;
-    for (int i = 0; i < a.size(); i++)
+    for (unsigned int i = 0; i < a.size(); i++)
     {
         max_current_sum = std::max(max_current_sum + a[i], 0);
         max_sum_so_far = std::max(max_current_sum, max_sum_so_far);
@@ -377,12 +393,72 @@ int maxSubSum(std::vector<int> a)
     return max_sum_so_far;
 }
 
+/*
+    Finds substring in a string (O(n))
+*/
+bool findNeedle(std::string n, std::string h)
+{
+    for (int i = 0; i < h.size(); i++)
+    {
+        if (h[i] != n[0]) continue;
+        for (int j = 1; j < n.size(); j++)
+        {
+            if (h[i + j] != n[j])
+            {
+                i += j;
+                break;
+            }
+            if (j == n.size() - 1)
+                return true;
+        }
+    }
+    return false;
+}
+
+/*
+    Does string to int conversion (O(n))
+*/
+int myAtoi(char *str)
+{
+    int index = -1;
+    while (str[++index] != '\0'){}
+
+    int val = 0, i = 1;
+    while (--index >= 0)
+    {
+        if (str[index] == '-')
+            val = -val;
+        else
+        {
+            val += (str[index] - '0') * i;
+            i *= 10;
+        }
+    }
+
+    return val;
+}
+
+/*
+    Recursive version of myAtio (O(n))
+*/
+void recursiveAtoi(char *str, int &i, int &val)
+{
+    if (*str != '\0')
+        recursiveAtoi(str + 1, i, val);
+    else
+        return;
+
+    if (*str == '-')
+        val = -val;
+    else
+    {
+        val += (*str - '0') * i;
+        i *= 10;
+    }
+}
 
 void main()
 {
-    std::vector<int> a = { -1, 5, 2, -100, 1000 };
-
-    std::cout << maxSubSum(a);
 
 	getchar();
 }
