@@ -41,54 +41,12 @@ void drawCircle(float a, float b, float r, float prec)
 /*
 	Swaps values of int poiters a and b
 */
-void swap(int *a, int *b)
+template<class T>
+void swap(T *a, T *b)
 {
 	*a ^= *b;
 	*b ^= *a;
 	*a ^= *b;
-}
-
-/*
-    Merge function for MergeSort algorithm
-*/
-void merge(std::vector<int> &arr, unsigned int start, unsigned int end)
-{
-    unsigned int mid = (start + end) / 2;
-    std::vector<int> tmp;
-    for (unsigned int z = start; z <= mid; z++)
-        tmp.push_back(arr[z]);
-
-    unsigned int i = 0;
-    unsigned int j = mid + 1;
-    unsigned int k = start;
-    while (i < tmp.size() && j <= end)
-    {
-        if (tmp[i] < arr[j])
-        {
-            arr[k] = tmp[i];
-            k++;
-            i++;
-        }
-        else
-        {
-            arr[k] = arr[j];
-            k++;
-            j++;
-        }
-    }
-
-    while (i < tmp.size())
-    {
-        arr[k] = tmp[i];
-        k++;
-        i++;
-    }
-    while (j <= end)
-    {
-        arr[k] = arr[j];
-        k++;
-        j++;
-    }
 }
 
 /*
@@ -204,23 +162,6 @@ void bubleSort(int arr[], unsigned int start, unsigned int end)
 		}
 		if (sorted) return;
 	}
-}
-
-/*
-    MergeSort sorting algorithm
-    arr - reference to vector of ints that are to be sorted
-    <begin, end> - sorting range
-*/
-void mergeSort(std::vector<int> &arr, unsigned int start, unsigned int end)
-{
-	if (start >= end) return;
-    unsigned int mid = (start + end) / 2;
-	if (mid > start)
-	{
-		mergeSort(arr, start, mid);
-		mergeSort(arr, mid + 1, end);
-	}
-	merge(arr, start, end);
 }
 
 /*
@@ -393,26 +334,8 @@ void testDictionaryClass()
 	}
 }
 
-
-void main()
-{
-    std::vector<int> arr;
-
-    for (int i = 0; i < 10000; i++)
-        arr.push_back(rand() % 100);
-
-    clock_t begin = clock();
-
-    quickSort(arr, 0, arr.size() - 1);
-
-    clock_t end = clock();
-
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    printf("QuickSort - %f", elapsed_secs);
-
-<<<<<<< HEAD
 /*
-    String rotation funstion (roationon by 1 to the right)
+String rotation funstion (roationon by 1 to the right)
 */
 void rotate(std::string &s)
 {
@@ -421,7 +344,7 @@ void rotate(std::string &s)
 }
 
 /*
-    Heaps' algorithm printing all possible permutations
+Heaps' algorithm printing all possible permutations
 */
 void permut(std::string &s, int n)
 {
@@ -441,19 +364,25 @@ void permut(std::string &s, int n)
     }
 }
 
+int maxSubSum(std::vector<int> a)
+{
+    int max_sum_so_far = 0;
+    int max_current_sum = 0;
+    for (int i = 0; i < a.size(); i++)
+    {
+        max_current_sum = std::max(max_current_sum + a[i], 0);
+        max_sum_so_far = std::max(max_current_sum, max_sum_so_far);
+    }
+
+    return max_sum_so_far;
+}
+
+
 void main()
 {
-    std::string s = "abcd";
+    std::vector<int> a = { -1, 5, 2, -100, 1000 };
 
-    permut(s, s.size());
+    std::cout << maxSubSum(a);
 
-=======
-    begin = clock();
-    mergeSort(arr, 0, arr.size() - 1);
-    end = clock();
-    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    printf("MergeSort - %f", elapsed_secs);
-
->>>>>>> origin/A_DEV
 	getchar();
 }
