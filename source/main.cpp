@@ -41,11 +41,41 @@ void drawCircle(float a, float b, float r, float prec)
 /*
 	Swaps values of int poiters a and b
 */
-void swap(int *a, int *b)
+template<class T>
+void swap(T *a, T *b)
 {
 	*a ^= *b;
 	*b ^= *a;
 	*a ^= *b;
+}
+
+/*
+	QuickSort sorting algorithm
+	arr - reference to vector of ints that are to be sorted
+	<begin, end> - sorting range
+*/
+void quickSort(std::vector<int> &arr, unsigned int begin, unsigned int end)
+{
+	int pivot = arr[(end + begin) / 2];
+	unsigned int i = begin;
+	unsigned int j = end;
+
+	while (i <= j)
+	{
+		while (arr[i] < pivot) i++;
+		while (arr[j] > pivot) j--;
+		if (i <= j)
+		{
+			swap(&arr[i], &arr[j]);
+			i++;
+			j--;
+		}
+	}
+
+	if (begin < j)
+		quickSort(arr, begin, j);
+	if (i < end)
+		quickSort(arr, i, end);
 }
 
 /*
@@ -92,32 +122,20 @@ void merge(std::vector<int> &arr, unsigned int start, unsigned int end)
 }
 
 /*
-	QuickSort sorting algorithm
-	arr - reference to vector of ints that are to be sorted
-	<begin, end> - sorting range
+    MergeSort sorting algorithm
+    arr - reference to vector of ints that are to be sorted
+    <begin, end> - sorting range
 */
-void quickSort(std::vector<int> &arr, unsigned int begin, unsigned int end)
+void mergeSort(std::vector<int> &arr, unsigned int start, unsigned int end)
 {
-	int pivot = arr[(end + begin) / 2];
-	unsigned int i = begin;
-	unsigned int j = end;
-
-	while (i <= j)
-	{
-		while (arr[i] < pivot) i++;
-		while (arr[j] > pivot) j--;
-		if (i <= j)
-		{
-			swap(&arr[i], &arr[j]);
-			i++;
-			j--;
-		}
-	}
-
-	if (begin < j)
-		quickSort(arr, begin, j);
-	if (i < end)
-		quickSort(arr, i, end);
+    if (start >= end) return;
+    unsigned int mid = (start + end) / 2;
+    if (mid > start)
+    {
+        mergeSort(arr, start, mid);
+        mergeSort(arr, mid + 1, end);
+    }
+    merge(arr, start, end);
 }
 
 /*
@@ -144,23 +162,6 @@ void bubleSort(int arr[], unsigned int start, unsigned int end)
 		}
 		if (sorted) return;
 	}
-}
-
-/*
-    MergeSort sorting algorithm
-    arr - reference to vector of ints that are to be sorted
-    <begin, end> - sorting range
-*/
-void mergeSort(std::vector<int> &arr, unsigned int start, unsigned int end)
-{
-	if (start >= end) return;
-    unsigned int mid = (start + end) / 2;
-	if (mid > start)
-	{
-		mergeSort(arr, start, mid);
-		mergeSort(arr, mid + 1, end);
-	}
-	merge(arr, start, end);
 }
 
 /*
@@ -206,7 +207,7 @@ public:
 		Node *node = first;
 		while (node)
 		{
-			printf("%d\n", node->data);
+			printf("%d ", node->data);
 			node = node->next;
 		}
 		printf("\n");
@@ -225,6 +226,19 @@ public:
 		}
 		first = prev;
 	}
+    void reverseRevursive(Node *current = nullptr, Node *previous = nullptr)
+    {
+        if (!current) 
+            current = first;
+
+        if (current->next)
+            reverseRevursive(current->next, current);
+        else
+            first = current;
+
+        current->next = previous;
+
+    }
 };
 
 /*
@@ -333,28 +347,118 @@ void testDictionaryClass()
 	}
 }
 
+/*
+    String rotation funstion (roationon by 1 to the right)
+*/
+void rotate(std::string &s)
+{
+    for (unsigned int i = 0; i < s.size() - 1; i++)
+        swap(&s[s.size() - 2 - i], &s[s.size() - 1 - i]);
+}
+
+/*
+    Heaps' algorithm printing all possible permutations
+*/
+void permut(std::string &s, int n)
+{
+    if (n == 1)
+        printf("%s\n", s.c_str());
+    else
+    {
+        for (int i = 0; i < n - 1; i++)
+        {
+            permut(s, n - 1);
+            if (n % 2 == 0)
+                swap(&s[i], &s[n - 1]);
+            else
+                swap(&s[0], &s[n - 1]);
+        }
+        permut(s, n - 1);
+    }
+}
+
+/*
+    Returns maximum sub sum of a vector (O(n))
+*/
+int maxSubSum(std::vector<int> a)
+{
+    int max_sum_so_far = 0;
+    int max_current_sum = 0;
+    for (unsigned int i = 0; i < a.size(); i++)
+    {
+        max_current_sum = std::max(max_current_sum + a[i], 0);
+        max_sum_so_far = std::max(max_current_sum, max_sum_so_far);
+    }
+
+    return max_sum_so_far;
+}
+
+/*
+    Finds substring in a string (O(n))
+*/
+bool findNeedle(std::string n, std::string h)
+{
+    for (int i = 0; i < h.size(); i++)
+    {
+        if (h[i] != n[0]) continue;
+        for (int j = 1; j < n.size(); j++)
+        {
+            if (h[i + j] != n[j])
+            {
+                i += j;
+                break;
+            }
+            if (j == n.size() - 1)
+                return true;
+        }
+    }
+    return false;
+}
+
+/*
+    Does string to int conversion (O(n))
+*/
+int myAtoi(char *str)
+{
+    int index = -1;
+    while (str[++index] != '\0'){}
+
+    int val = 0, i = 1;
+    while (--index >= 0)
+    {
+        if (str[index] == '-')
+            val = -val;
+        else
+        {
+            val += (str[index] - '0') * i;
+            i *= 10;
+        }
+    }
+
+    return val;
+}
+
+/*
+    Recursive version of myAtio (O(n))
+*/
+void recursiveAtoi(char *str, int &i, int &val)
+{
+    if (*str != '\0')
+        recursiveAtoi(str + 1, i, val);
+    else
+        return;
+
+    if (*str == '-')
+        val = -val;
+    else
+    {
+        val += (*str - '0') * i;
+        i *= 10;
+    }
+}
 
 void main()
 {
-    std::vector<int> arr;
-
-    for (int i = 0; i < 10000; i++)
-        arr.push_back(rand() % 100);
-
-    clock_t begin = clock();
-
-    quickSort(arr, 0, arr.size() - 1);
-
-    clock_t end = clock();
-
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    printf("QuickSort - %f", elapsed_secs);
-
-    begin = clock();
-    mergeSort(arr, 0, arr.size() - 1);
-    end = clock();
-    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    printf("MergeSort - %f", elapsed_secs);
 
 	getchar();
 }
