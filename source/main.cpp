@@ -457,8 +457,25 @@ void recursiveAtoi(char *str, int &i, int &val)
     }
 }
 
+/*
+    Prints subsets (combinations) of str 
+*/
+void subSets(std::string str, std::string tmp, int i)
+{
+    for (int j = i; j < str.size(); j++)
+    {
+        std::cout << tmp + str[j] << std::endl;
+        subSets(str, tmp + str[j], ++i);
+    }
+}
+
+
 void main()
 {
+    std::string str = "abcde";
+    std::string tmp;
+    int i = 0;
+    subSets(str, tmp, i);
 
 	getchar();
 }
