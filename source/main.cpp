@@ -465,17 +465,66 @@ void subSets(std::string str, std::string tmp, int i)
     for (int j = i; j < str.size(); j++)
     {
         std::cout << tmp + str[j] << std::endl;
-        subSets(str, tmp + str[j], ++i);
+        subSets(str, tmp + str[j], i + 1);
     }
 }
 
+/*
+    Prints all n! permutations of string str
+*/
+void permut(std::string str, std::string tmp, int i)
+{
+    if (tmp.size() == str.size())
+    {
+        std::cout << tmp << std::endl;
+        return;
+    }
+
+    for (int k = 0; k <= tmp.size(); k++)
+    {
+        tmp.insert(tmp.begin() + k, str[i]);
+        permut(str, tmp, i + 1);
+        tmp.erase(tmp.begin() + k);
+    }
+}
+
+/*
+    In how many ways one can jump up the stairs
+    jumping 1, 2 or 3 steps at a time
+*/
+int jump(int n, std::string str = std::string(), int sum = 0)
+{
+    if (sum == n)
+    {
+        std::cout << str << std::endl;
+        return 1;
+    }
+    else if (sum > n)
+        return 0;
+
+    return jump(n, str + '1', sum + 1) + jump(n, str + '2', sum + 2) + jump(n, str + '3', sum + 3);
+}
+
+/*
+    Prints all possible splits o n cents
+*/
+void find(int n, int a = 0, int b = 0, int c = 0, int d = 0)
+{
+    int sum = 25 * a + 10 * b + 5 * c + 1 * d;
+    if (sum == n)
+    {
+        std::cout << "25*" << a << " + 10*" << b << " + 5*" << c << " + 1*" << d << std::endl;
+        return;
+    }
+
+    if (sum + 1 <= n) find(n, a, b, c, d + 1);
+    if (sum + 5 <= n) find(n, a, b, c + 1, d);
+    if (sum + 10 <= n) find(n, a, b + 1, c, d);
+    if (sum + 25 <= n) find(n, a + 1, b, c, d);
+}
 
 void main()
 {
-    std::string str = "abcde";
-    std::string tmp;
-    int i = 0;
-    subSets(str, tmp, i);
 
 	getchar();
 }
