@@ -457,8 +457,26 @@ void recursiveAtoi(char *str, int &i, int &val)
     }
 }
 
+void parenthesis(std::string str, int max, int n = 1)
+{
+    if (str.size() >= max)
+    {
+        std::cout << str << std::endl;
+        return;
+    }
+
+    for (int i = n; i <= str.size(); i++)
+    {
+        str.insert(str.begin() + i, ')');
+        parenthesis(str, max, n + 2);
+        str.erase(str.begin() + i);
+    }
+}
+
 void main()
 {
+    std::string str = "(((";
+    parenthesis(str, str.size()*2);
 
 	getchar();
 }
