@@ -6,7 +6,12 @@
 #include <sstream>
 #include <algorithm>
 #include <ctime>
-
+#include <cstdio>
+#include <cstdlib>
+#include <stack>
+#include <list>
+#include <exception>
+#include <stdexcept>
 
 /*
 	Returns greatest devisor of a and b
@@ -539,8 +544,109 @@ void find(int n, int a = 0, int b = 0, int c = 0, int d = 0)
     if (sum + 25 <= n) find(n, a + 1, b, c, d);
 }
 
+void hanoi(int disk, int source, int dest, int aux)
+{
+    if (disk == 0)
+    {
+        std::cout << "Move disc " << disk << " from rod " << source << " to rod " << dest << std::endl;
+    }
+    else
+    {
+        hanoi(disk - 1, source, aux, dest);
+        std::cout << "Move disc " << disk << " from rod " << source << " to rod " << dest << std::endl;
+        hanoi(disk - 1, aux, dest, source);
+    }
+}
+
+void removeDuplicates(std::string &str)
+{
+    bool chars[256];
+    memset(chars, false, 256);
+
+    for (int i = str.size() - 1; i >= 0; i--)
+    {
+        if (chars[str[i]])
+            str.erase(str.begin() + i);
+        chars[str[i]] = true;
+    }
+}
+
+bool areAnagrams(std::string str1, std::string str2)
+{
+    if (str1.size() != str2.size()) return false;
+
+    std::bitset<256> set1;
+    std::bitset<256> set2;
+
+    for (int i = 0; i < str1.size(); i++)
+    {
+        set1.at(str1[i]);
+        set2.at(str2[i]);
+    }
+
+    return (set1 == set2);
+}
+
+void getMaxGain(int a[], int i, int act, int opt, int gain, int &maxGain)
+{
+    if (i >= 6)
+    {
+        maxGain = std::max(maxGain, gain);
+        return;
+    }
+
+    switch (opt)
+    {
+    case 0: gain -= a[i]; act += 1; break; // buy
+    case 1: gain += a[i]; act -= 1; break; // sell
+    case 2: break; // skip
+    }
+
+    getMaxGain(a, i + 1, act, 0, gain, maxGain); // buy
+    if(act > 0) 
+        getMaxGain(a, i + 1, act, 1, gain, maxGain); // sell
+    getMaxGain(a, i + 1, act, 2, gain, maxGain); // do nothing
+}
+
+int getMaxProfit(int stockPricesYesterday[]) {
+
+    int minPrice = stockPricesYesterday[0];
+    int maxProfit = 0;
+
+    for (int i = 0; i < 6; i++) {
+
+        int currentPrice = stockPricesYesterday[i];
+
+        // ensure min_price is the lowest price we've seen so far
+        minPrice = std::min(minPrice, currentPrice);
+
+        // see what our profit would be if we bought at the
+        // min price and sold at the current price
+        int potentialProfit = currentPrice - minPrice;
+
+        // update maxProfit if we can do better
+        maxProfit = std::max(maxProfit, potentialProfit);
+    }
+
+    return maxProfit;
+}
+
+int maks(int a, int b)
+{
+    if (!(a^b)) return a;
+    
+    int bMorea = ((a - b) & (1 << ((sizeof(a) * 8) - 2))) >> 30;
+    int aMoreb = ((b - a) & (1 << ((sizeof(a) * 8) - 2))) >> 30;
+
+    a = a >> (((sizeof(a) * 8)-1) * bMorea);
+    b = b >> (((sizeof(b) * 8)-1) * aMoreb);
+
+    return a | b;
+}
+
 void main()
 {
+    std::cout << maks(14, 23);
 
-	getchar();
+    getchar();
 }
