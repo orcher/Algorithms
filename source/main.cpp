@@ -6,7 +6,12 @@
 #include <sstream>
 #include <algorithm>
 #include <ctime>
-
+#include <cstdio>
+#include <cstdlib>
+#include <stack>
+#include <list>
+#include <exception>
+#include <stdexcept>
 
 /*
 	Returns greatest devisor of a and b
@@ -457,8 +462,191 @@ void recursiveAtoi(char *str, int &i, int &val)
     }
 }
 
+void parenthesis(std::string str, int max, int n = 1)
+{
+    if (str.size() >= max)
+    {
+        std::cout << str << std::endl;
+        return;
+    }
+
+    for (int i = n; i <= str.size(); i++)
+    {
+        str.insert(str.begin() + i, ')');
+        parenthesis(str, max, n + 2);
+        str.erase(str.begin() + i);
+    }
+}
+
+/*
+    Prints subsets (combinations) of str 
+*/
+void subSets(std::string str, std::string tmp, int i)
+{
+    for (int j = i; j < str.size(); j++)
+    {
+        std::cout << tmp + str[j] << std::endl;
+        subSets(str, tmp + str[j], i + 1);
+    }
+}
+
+/*
+    Prints all n! permutations of string str
+*/
+void permut(std::string str, std::string tmp, int i)
+{
+    if (tmp.size() == str.size())
+    {
+        std::cout << tmp << std::endl;
+        return;
+    }
+
+    for (int k = 0; k <= tmp.size(); k++)
+    {
+        tmp.insert(tmp.begin() + k, str[i]);
+        permut(str, tmp, i + 1);
+        tmp.erase(tmp.begin() + k);
+    }
+}
+
+/*
+    In how many ways one can jump up the stairs
+    jumping 1, 2 or 3 steps at a time
+*/
+int jump(int n, std::string str = std::string(), int sum = 0)
+{
+    if (sum == n)
+    {
+        std::cout << str << std::endl;
+        return 1;
+    }
+    else if (sum > n)
+        return 0;
+
+    return jump(n, str + '1', sum + 1) + jump(n, str + '2', sum + 2) + jump(n, str + '3', sum + 3);
+}
+
+/*
+    Prints all possible splits o n cents
+*/
+void find(int n, int a = 0, int b = 0, int c = 0, int d = 0)
+{
+    int sum = 25 * a + 10 * b + 5 * c + 1 * d;
+    if (sum == n)
+    {
+        std::cout << "25*" << a << " + 10*" << b << " + 5*" << c << " + 1*" << d << std::endl;
+        return;
+    }
+
+    if (sum + 1 <= n) find(n, a, b, c, d + 1);
+    if (sum + 5 <= n) find(n, a, b, c + 1, d);
+    if (sum + 10 <= n) find(n, a, b + 1, c, d);
+    if (sum + 25 <= n) find(n, a + 1, b, c, d);
+}
+
+void hanoi(int disk, int source, int dest, int aux)
+{
+    if (disk == 0)
+    {
+        std::cout << "Move disc " << disk << " from rod " << source << " to rod " << dest << std::endl;
+    }
+    else
+    {
+        hanoi(disk - 1, source, aux, dest);
+        std::cout << "Move disc " << disk << " from rod " << source << " to rod " << dest << std::endl;
+        hanoi(disk - 1, aux, dest, source);
+    }
+}
+
+void removeDuplicates(std::string &str)
+{
+    bool chars[256];
+    memset(chars, false, 256);
+
+    for (int i = str.size() - 1; i >= 0; i--)
+    {
+        if (chars[str[i]])
+            str.erase(str.begin() + i);
+        chars[str[i]] = true;
+    }
+}
+
+bool areAnagrams(std::string str1, std::string str2)
+{
+    if (str1.size() != str2.size()) return false;
+
+    std::bitset<256> set1;
+    std::bitset<256> set2;
+
+    for (int i = 0; i < str1.size(); i++)
+    {
+        set1.at(str1[i]);
+        set2.at(str2[i]);
+    }
+
+    return (set1 == set2);
+}
+
+void getMaxGain(int a[], int i, int act, int opt, int gain, int &maxGain)
+{
+    if (i >= 6)
+    {
+        maxGain = std::max(maxGain, gain);
+        return;
+    }
+
+    switch (opt)
+    {
+    case 0: gain -= a[i]; act += 1; break; // buy
+    case 1: gain += a[i]; act -= 1; break; // sell
+    case 2: break; // skip
+    }
+
+    getMaxGain(a, i + 1, act, 0, gain, maxGain); // buy
+    if(act > 0) 
+        getMaxGain(a, i + 1, act, 1, gain, maxGain); // sell
+    getMaxGain(a, i + 1, act, 2, gain, maxGain); // do nothing
+}
+
+int getMaxProfit(int stockPricesYesterday[]) {
+
+    int minPrice = stockPricesYesterday[0];
+    int maxProfit = 0;
+
+    for (int i = 0; i < 6; i++) {
+
+        int currentPrice = stockPricesYesterday[i];
+
+        // ensure min_price is the lowest price we've seen so far
+        minPrice = std::min(minPrice, currentPrice);
+
+        // see what our profit would be if we bought at the
+        // min price and sold at the current price
+        int potentialProfit = currentPrice - minPrice;
+
+        // update maxProfit if we can do better
+        maxProfit = std::max(maxProfit, potentialProfit);
+    }
+
+    return maxProfit;
+}
+
+int maks(int a, int b)
+{
+    if (!(a^b)) return a;
+    
+    int bMorea = ((a - b) & (1 << ((sizeof(a) * 8) - 2))) >> 30;
+    int aMoreb = ((b - a) & (1 << ((sizeof(a) * 8) - 2))) >> 30;
+
+    a = a >> (((sizeof(a) * 8)-1) * bMorea);
+    b = b >> (((sizeof(b) * 8)-1) * aMoreb);
+
+    return a | b;
+}
+
 void main()
 {
+    std::cout << maks(14, 23);
 
-	getchar();
+    getchar();
 }
